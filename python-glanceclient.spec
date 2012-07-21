@@ -1,6 +1,6 @@
 Name:             python-glanceclient
 Version:          2012.2
-Release:          0.1.f1%{?dist}
+Release:          0.2.f1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -46,5 +46,8 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2012.2-0.2.f1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Wed Jun 06 2012 Pádraig Brady <P@draigBrady.com> 2012.2-0.1.f1
 - Initial (folsom-1) release
