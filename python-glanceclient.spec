@@ -1,6 +1,6 @@
 Name:             python-glanceclient
 Version:          2012.2
-Release:          0.2.f1%{?dist}
+Release:          0.3.f1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -34,6 +34,9 @@ glanceclient module), and a command-line script (glance). Each implements
 
 %install
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+# rename client script to avoid conflict with old glance client
+# from openstack-glance RPM
+mv %{buildroot}%{_bindir}/glance %{buildroot}%{_bindir}/glance-client
 
 # Delete tests
 rm -fr %{buildroot}%{python_sitelib}/tests
@@ -41,11 +44,14 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %files
 %doc README.rst
 %doc LICENSE
-%{_bindir}/glance
+%{_bindir}/glance-client
 %{python_sitelib}/glanceclient
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Fri Aug 03 2012 Alan Pevec <apevec@redhat.com> 2012.2-0.3.f1
+- rename client script to avoid conflict with old glance client
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2012.2-0.2.f1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
