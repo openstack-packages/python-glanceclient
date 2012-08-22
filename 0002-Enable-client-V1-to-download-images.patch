@@ -1,0 +1,37 @@
+From 77c8e3f023daec1cabf07eeaeb55c3a45af311a1 Mon Sep 17 00:00:00 2001
+From: Lars Gellrich <lars.gellrich@hp.com>
+Date: Mon, 13 Aug 2012 09:21:58 +0000
+Subject: [PATCH] Enable client V1 to download images
+
+Added the CLI option image-download to download an image via API V1.
+Based on commit 137b3cf975d73437943e100065c76b83acfa7dd3
+
+Related to bp glance-client-v2
+
+Change-Id: Ie587e208ad7433e468798cd9b1846b4a21e1c4ec
+---
+ glanceclient/v1/shell.py |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+diff --git a/glanceclient/v1/shell.py b/glanceclient/v1/shell.py
+index c521ea2..e131a08 100644
+--- a/glanceclient/v1/shell.py
++++ b/glanceclient/v1/shell.py
+@@ -77,6 +77,17 @@ def do_image_show(gc, args):
+     _image_show(image)
+ 
+ 
++@utils.arg('--file', metavar='<FILE>',
++           help='Local file to save downloaded image data to. '
++                'If this is not specified the image data will be '
++                'written to stdout.')
++@utils.arg('id', metavar='<IMAGE_ID>', help='ID of image to download.')
++def do_image_download(gc, args):
++    """Download a specific image."""
++    body = gc.images.data(args.id)
++    utils.save_image(body, args.file)
++
++
+ @utils.arg('--id', metavar='<IMAGE_ID>',
+            help='ID of image to reserve.')
+ @utils.arg('--name', metavar='<NAME>',
