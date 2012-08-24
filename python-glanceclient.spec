@@ -26,7 +26,7 @@ BuildRequires:    python-setuptools
 BuildRequires:    python-setuptools_git
 
 Requires:         python-httplib2
-Requires:         python-keystoneclient
+Requires:         python-keystoneclient >= 1:0.1.2
 Requires:         python-prettytable
 Requires:         python-setuptools
 Requires:         python-warlock
