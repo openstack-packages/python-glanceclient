@@ -23,7 +23,6 @@ Patch0005: 0005-adjust-egg-info-for-Fedora.patch
 
 BuildArch:        noarch
 BuildRequires:    python-setuptools
-BuildRequires:    python-setuptools_git
 
 Requires:         python-httplib2
 Requires:         python-keystoneclient >= 1:0.1.2
@@ -45,6 +44,7 @@ glanceclient module), and a command-line script (glance). Each implements
 %patch0005 -p1
 # Remove bundled egg-info
 rm -rf python_glanceclient.egg-info
+sed -i '/setuptools-git/d' setup.py
 
 %build
 %{__python} setup.py build
