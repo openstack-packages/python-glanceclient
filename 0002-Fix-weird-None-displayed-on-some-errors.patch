@@ -1,0 +1,28 @@
+From 902bff79bbe52e831da947bb5ac5fce2330d810e Mon Sep 17 00:00:00 2001
+From: Vincent Untz <vuntz@suse.com>
+Date: Thu, 13 Sep 2012 11:12:00 +0200
+Subject: [PATCH] Fix weird "None" displayed on some errors
+
+logging.exception() should only be called from an exception handler,
+which is not the case here.
+
+Part of bug 1050260.
+
+Change-Id: I591a68c458cd733c04cea7d2d640afdbb7dd19f6
+---
+ glanceclient/common/http.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/glanceclient/common/http.py b/glanceclient/common/http.py
+index 4349e86..4a6ce53 100644
+--- a/glanceclient/common/http.py
++++ b/glanceclient/common/http.py
+@@ -155,7 +155,7 @@ class HTTPClient(object):
+             self.log_http_response(resp)
+ 
+         if 400 <= resp.status < 600:
+-            LOG.exception("Request returned failure status.")
++            LOG.error("Request returned failure status.")
+             raise exc.from_response(resp)
+         elif resp.status in (301, 302, 305):
+             # Redirected. Reissue the request to the new location.

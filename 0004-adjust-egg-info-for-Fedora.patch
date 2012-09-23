@@ -1,4 +1,4 @@
-From 6078d82488fdf503391767f910f36cf9661ffbbc Mon Sep 17 00:00:00 2001
+From b248b76d6c404578b625efc4b190161b12d9510e Mon Sep 17 00:00:00 2001
 From: Alan Pevec <apevec@redhat.com>
 Date: Thu, 23 Aug 2012 01:35:20 +0200
 Subject: [PATCH] adjust egg info for Fedora

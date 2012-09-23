@@ -1,0 +1,31 @@
+From cdc94af297fe56341dfe0484d62f2e69d9aa5e9b Mon Sep 17 00:00:00 2001
+From: Stuart McLaren <stuart.mclaren@hp.com>
+Date: Mon, 17 Sep 2012 13:39:33 +0000
+Subject: [PATCH] Typo in image-create help page
+
+The image-create help page reversed the DISK_FORMAT
+and CONTAINER_FORMAT metavars.
+
+Fixes bug 1051968.
+
+Change-Id: I385cb0912ad87a62fd10742b5da23a5ea8bc9bb8
+---
+ glanceclient/v1/shell.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/glanceclient/v1/shell.py b/glanceclient/v1/shell.py
+index 3646f9f..500014c 100644
+--- a/glanceclient/v1/shell.py
++++ b/glanceclient/v1/shell.py
+@@ -92,9 +92,9 @@ def do_image_download(gc, args):
+            help='ID of image to reserve.')
+ @utils.arg('--name', metavar='<NAME>',
+            help='Name of image.')
+-@utils.arg('--disk-format', metavar='<CONTAINER_FORMAT>',
++@utils.arg('--disk-format', metavar='<DISK_FORMAT>',
+            help='Disk format of image.')
+-@utils.arg('--container-format', metavar='<DISK_FORMAT>',
++@utils.arg('--container-format', metavar='<CONTAINER_FORMAT>',
+            help='Container format of image.')
+ @utils.arg('--owner', metavar='<TENANT_ID>',
+            help='Tenant who should own image.')
