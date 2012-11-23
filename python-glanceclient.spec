@@ -3,7 +3,7 @@ Name:             python-glanceclient
 # and restarted version numbering from 0.1.1
 # https://lists.launchpad.net/openstack/msg14248.html
 Epoch:            1
-Version:          0.5.1
+Version:          0.6.0
 Release:          1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
@@ -14,12 +14,10 @@ URL:              http://github.com/openstack/python-glanceclient
 Source0:          http://tarballs.openstack.org/%{name}/%{name}-%{version}.tar.gz
 
 #
-# patches_base=0.5.1
+# patches_base=0.6.0
 #
-Patch0001: 0001-Make-ConnectionRefused-error-more-informative.patch
-Patch0002: 0002-Fix-weird-None-displayed-on-some-errors.patch
-Patch0003: 0003-Typo-in-image-create-help-page.patch
-Patch0004: 0004-adjust-egg-info-for-Fedora.patch
+Patch0001: 0001-Hook-up-region_name-argument.patch
+Patch0002: 0002-adjust-egg-info-for-Fedora.patch
 
 BuildArch:        noarch
 BuildRequires:    python-setuptools
@@ -38,10 +36,6 @@ glanceclient module), and a command-line script (glance). Each implements
 %prep
 %setup -q
 
-%patch0001 -p1
-%patch0002 -p1
-%patch0003 -p1
-%patch0004 -p1
 
 # Remove bundled egg-info
 rm -rf python_glanceclient.egg-info
@@ -52,6 +46,9 @@ sed -i '/setuptools-git/d' setup.py
 
 %install
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+
+# move versioninfo https://review.openstack.org/15962
+mv %{buildroot}/usr/glanceclient/versioninfo %{buildroot}%{python_sitelib}/glanceclient/
 
 # Delete tests
 rm -fr %{buildroot}%{python_sitelib}/tests
@@ -64,6 +61,9 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Fri Nov 23 2012 Alan Pevec <apevec@redhat.com> 1:0.6.0-1
+- Update to 0.6.0
+
 * Sat Sep 15 2012 Alan Pevec <apevec@redhat.com> 1:0.5.1-1
 - Update to 0.5.1
 
