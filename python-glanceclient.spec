@@ -3,21 +3,18 @@ Name:             python-glanceclient
 # and restarted version numbering from 0.1.1
 # https://lists.launchpad.net/openstack/msg14248.html
 Epoch:            1
-Version:          0.6.0
+Version:          0.7.0
 Release:          1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
 License:          ASL 2.0
-URL:              http://github.com/openstack/python-glanceclient
-#Source0:          https://launchpad.net/%{name}/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-Source0:          http://tarballs.openstack.org/%{name}/%{name}-%{version}.tar.gz
+URL:              http://pypi.python.org/pypi/%{name}
+Source0:          http://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
 
 #
-# patches_base=0.6.0
+# patches_base=0.7.0
 #
-Patch0001: 0001-Hook-up-region_name-argument.patch
-Patch0002: 0002-adjust-egg-info-for-Fedora.patch
 
 BuildArch:        noarch
 BuildRequires:    python-setuptools
@@ -35,11 +32,10 @@ glanceclient module), and a command-line script (glance). Each implements
 
 %prep
 %setup -q
-
-
 # Remove bundled egg-info
 rm -rf python_glanceclient.egg-info
-sed -i '/setuptools-git/d' setup.py
+# let RPM handle deps
+sed -i '/setup_requires/d; /install_requires/d; /dependency_links/d' setup.py
 
 %build
 %{__python} setup.py build
@@ -61,6 +57,9 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Wed Jan 30 2013 Alan Pevec <apevec@redhat.com> 1:0.7.0-1
+- Update to 0.7.0
+
 * Fri Nov 23 2012 Alan Pevec <apevec@redhat.com> 1:0.6.0-1
 - Update to 0.6.0
 
