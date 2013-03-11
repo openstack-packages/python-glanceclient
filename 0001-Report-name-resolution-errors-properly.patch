@@ -1,0 +1,88 @@
+From 0fce5e31dfba299018e5efd0ec7e263ef48bf271 Mon Sep 17 00:00:00 2001
+From: Stanislaw Pitucha <stanislaw.pitucha@hp.com>
+Date: Tue, 19 Feb 2013 15:40:16 +0000
+Subject: [PATCH] Report name resolution errors properly
+
+Errors in name resolution have been logged previously with the url path
+rather than the hostname. That resulted in incorrect errors like:
+
+InvalidEndpoint: Error finding address for
+/v1/images/detail?is_public=none&limit=20: [Errno -2]
+Name or service not known
+
+rather than one mentioning hostname itself. This patch changes the log
+message to fit the situation.
+
+Change-Id: I1eecbcb22d41b1341c214937b9cbfd046fd301a0
+---
+ glanceclient/common/http.py |  3 ++-
+ tests/test_http.py          | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/glanceclient/common/http.py b/glanceclient/common/http.py
+index 115204f..7146ace 100644
+--- a/glanceclient/common/http.py
++++ b/glanceclient/common/http.py
+@@ -183,7 +183,8 @@ class HTTPClient(object):
+                 conn.request(method, conn_url, **kwargs)
+             resp = conn.getresponse()
+         except socket.gaierror as e:
+-            message = "Error finding address for %(url)s: %(e)s" % locals()
++            message = "Error finding address for %s: %s" % (
++                self.endpoint_hostname, e)
+             raise exc.InvalidEndpoint(message=message)
+         except (socket.error, socket.timeout) as e:
+             endpoint = self.endpoint
+diff --git a/tests/test_http.py b/tests/test_http.py
+index cabcf8d..3d87444 100644
+--- a/tests/test_http.py
++++ b/tests/test_http.py
+@@ -83,6 +83,48 @@ class TestClient(testtools.TestCase):
+         self.assertEqual(resp, fake)
+ 
+ 
++class TestHostResolutionError(testtools.TestCase):
++
++    def setUp(self):
++        super(TestHostResolutionError, self).setUp()
++        self.mock = mox.Mox()
++        self.invalid_host = "example.com.incorrect_top_level_domain"
++
++    def test_incorrect_domain_error(self):
++        """
++        Make sure that using a domain which does not resolve causes an
++        exception which mentions that specific hostname as a reason for
++        failure.
++        """
++        class FailingConnectionClass(object):
++            def __init__(self, *args, **kwargs):
++                pass
++
++            def putrequest(self, *args, **kwargs):
++                raise socket.gaierror(-2, "Name or service not known")
++
++            def request(self, *args, **kwargs):
++                raise socket.gaierror(-2, "Name or service not known")
++
++        self.endpoint = 'http://%s:9292' % (self.invalid_host,)
++        self.client = http.HTTPClient(self.endpoint, token=u'abc123')
++
++        self.mock.StubOutWithMock(self.client, 'get_connection')
++        self.client.get_connection().AndReturn(FailingConnectionClass())
++        self.mock.ReplayAll()
++
++        try:
++            self.client.raw_request('GET', '/example/path')
++            self.fail("gaierror should be raised")
++        except exc.InvalidEndpoint as e:
++            self.assertTrue(self.invalid_host in str(e),
++                            "exception should contain the hostname")
++
++    def tearDown(self):
++        super(TestHostResolutionError, self).tearDown()
++        self.mock.UnsetStubs()
++
++
+ class TestResponseBodyIterator(testtools.TestCase):
+     def test_iter_default_chunk_size_64k(self):
+         resp = utils.FakeResponse({}, StringIO.StringIO('X' * 98304))
