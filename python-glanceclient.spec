@@ -59,7 +59,7 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
-* Mon Mar 11 2013 Jakub Ruzicka <jruzicka@redhat.com> - 
+* Mon Mar 11 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.8.0-1
 - Update to 0.8.0.
 - Switch from tarballs.openstack.org to pypi sources.
 
