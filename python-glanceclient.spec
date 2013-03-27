@@ -1,20 +1,20 @@
 Name:             python-glanceclient
-# Since folsom-2 OpenStack clients follow their own release plan
-# and restarted version numbering from 0.1.1
-# https://lists.launchpad.net/openstack/msg14248.html
 Epoch:            1
-Version:          0.7.0
+Version:          0.8.0
 Release:          1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
 License:          ASL 2.0
-URL:              http://pypi.python.org/pypi/%{name}
-Source0:          http://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
+URL:              http://github.com/openstack/python-glanceclient
+Source0:          https://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
 
 #
-# patches_base=0.7.0
+# patches_base=0.8.0+1
 #
+Patch0001: 0001-Report-name-resolution-errors-properly.patch
+Patch0002: 0002-Replace-SchemaNotFound-with-HTTPNotFound.patch
+Patch0003: 0003-Use-getattr-properly-in-legacy-shell.patch
 
 BuildArch:        noarch
 BuildRequires:    python-setuptools
@@ -32,6 +32,11 @@ glanceclient module), and a command-line script (glance). Each implements
 
 %prep
 %setup -q
+
+%patch0001 -p1
+%patch0002 -p1
+%patch0003 -p1
+
 # Remove bundled egg-info
 rm -rf python_glanceclient.egg-info
 # let RPM handle deps
@@ -57,6 +62,10 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Mon Mar 11 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.8.0-1
+- Update to 0.8.0.
+- Switch from tarballs.openstack.org to pypi sources.
+
 * Wed Jan 30 2013 Alan Pevec <apevec@redhat.com> 1:0.7.0-1
 - Update to 0.7.0
 
