@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
 Version:          0.8.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -24,6 +24,7 @@ Requires:         python-keystoneclient >= 1:0.1.2
 Requires:         python-prettytable
 Requires:         python-setuptools
 Requires:         python-warlock
+Requires:         pyOpenSSL
 
 %description
 This is a client for the OpenStack Glance API. There's a Python API (the
@@ -62,6 +63,9 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Wed Mar 27 2013 Pádraig Brady <P@draigBrady.com> - 1:0.8.0-2
+- Add a dependency on pyOpenSSL
+
 * Mon Mar 11 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.8.0-1
 - Update to 0.8.0.
 - Switch from tarballs.openstack.org to pypi sources.
