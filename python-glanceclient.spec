@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
-Version:          0.8.0
-Release:          2%{?dist}
+Version:          0.9.0
+Release:          1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -10,11 +10,11 @@ URL:              http://github.com/openstack/python-glanceclient
 Source0:          https://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
 
 #
-# patches_base=0.8.0+1
+# patches_base=0.9.0
 #
-Patch0001: 0001-Report-name-resolution-errors-properly.patch
-Patch0002: 0002-Replace-SchemaNotFound-with-HTTPNotFound.patch
-Patch0003: 0003-Use-getattr-properly-in-legacy-shell.patch
+Patch0001: 0001-Fix-problem-running-glance-version.patch
+Patch0002: 0002-Fix-glance-add-parsing-of-copy_from-option.patch
+Patch0003: 0003-bug-1166263-image-update-handling-for-closed-stdin.patch
 
 BuildArch:        noarch
 BuildRequires:    python-setuptools
@@ -63,6 +63,10 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Mon May 06 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.9.0-1
+- Update to 0.9.0.
+- Include selected fixes.
+
 * Wed Mar 27 2013 Pádraig Brady <P@draigBrady.com> - 1:0.8.0-2
 - Add a dependency on pyOpenSSL
 

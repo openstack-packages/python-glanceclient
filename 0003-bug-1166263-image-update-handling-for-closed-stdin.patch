@@ -1,0 +1,54 @@
+From b76382c1687497c03951fbfe8fa326df7805a851 Mon Sep 17 00:00:00 2001
+From: MattieuPuel <vodmat.news@gmail.com>
+Date: Sun, 14 Apr 2013 20:39:19 +0200
+Subject: [PATCH] bug 1166263 image-update handling for closed stdin
+
+handles the case where an image-update command is issued from a cron job with an
+invalid standard input file descriptor: consider no image data is provided when
+no --file option present.
+
+Change-Id: I5eb3433311e5faf0a3fb7eb36f6a01e5df7efe4c
+---
+ glanceclient/v1/shell.py | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/glanceclient/v1/shell.py b/glanceclient/v1/shell.py
+index 5ef6cfa..a1283b3 100644
+--- a/glanceclient/v1/shell.py
++++ b/glanceclient/v1/shell.py
+@@ -113,19 +113,26 @@ def _set_data_field(fields, args):
+         if args.file:
+             fields['data'] = open(args.file, 'rb')
+         else:
+-            # We distinguish between cases where image data is pipelined:
+-            # (1) glance ... < /tmp/file or cat /tmp/file | glance ...
+-            # and cases where no image data is provided:
+-            # (2) glance ...
+-            if (sys.stdin.isatty() is not True):
+-                # Our input is from stdin, and we are part of
+-                # a pipeline, so data may be present. (We are of
+-                # type (1) above.)
++            # distinguish cases where:
++            # (1) stdin is not valid (as in cron jobs):
++            #     glance ... <&-
++            # (2) image data is provided through standard input:
++            #     glance ... < /tmp/file or cat /tmp/file | glance ...
++            # (3) no image data provided:
++            #     glance ...
++            try:
++                os.fstat(0)
++            except OSError:
++                # (1) stdin is not valid (closed...)
++                fields['data'] = None
++                return
++            if not sys.stdin.isatty():
++                # (2) image data is provided through standard input
+                 if msvcrt:
+                     msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
+                 fields['data'] = sys.stdin
+             else:
+-                # We are of type (2) above, no image data supplied
++                # (3) no image data provided
+                 fields['data'] = None
+ 
+ 
