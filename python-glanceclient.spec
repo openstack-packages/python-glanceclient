@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
 Version:          0.9.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -49,8 +49,8 @@ sed -i '/setup_requires/d; /install_requires/d; /dependency_links/d' setup.py
 %install
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 
-# move versioninfo https://review.openstack.org/15962
-mv %{buildroot}/usr/glanceclient/versioninfo %{buildroot}%{python_sitelib}/glanceclient/
+# generate versioninfo
+echo "%{version}" > %{buildroot}%{python_sitelib}/glanceclient/versioninfo
 
 # Delete tests
 rm -fr %{buildroot}%{python_sitelib}/tests
@@ -63,6 +63,9 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Mon May 06 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.9.0-2
+- versioninfo is gone from tarball, generate it.
+
 * Mon May 06 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.9.0-1
 - Update to 0.9.0.
 - Include selected fixes.
