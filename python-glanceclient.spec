@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
 Version:          0.9.0
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -63,6 +63,9 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Mon May 06 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.9.0-2
 - versioninfo is gone from tarball, generate it.
 
