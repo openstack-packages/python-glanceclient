@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
-Version:          0.9.0
-Release:          3%{?dist}
+Version:          0.10.0
+Release:          1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -10,17 +10,18 @@ URL:              http://github.com/openstack/python-glanceclient
 Source0:          https://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
 
 #
-# patches_base=0.9.0
+# patches_base=0.10.0
 #
-Patch0001: 0001-Fix-problem-running-glance-version.patch
-Patch0002: 0002-Fix-glance-add-parsing-of-copy_from-option.patch
-Patch0003: 0003-bug-1166263-image-update-handling-for-closed-stdin.patch
+Patch0001: 0001-Remove-runtime-dependency-on-python-pbr.patch
 
 BuildArch:        noarch
+BuildRequires:    python2-devel
 BuildRequires:    python-setuptools
+BuildRequires:    python-d2to1
+BuildRequires:    python-pbr
 
 Requires:         python-httplib2
-Requires:         python-keystoneclient >= 1:0.1.2
+Requires:         python-keystoneclient
 Requires:         python-prettytable
 Requires:         python-setuptools
 Requires:         python-warlock
@@ -31,17 +32,34 @@ This is a client for the OpenStack Glance API. There's a Python API (the
 glanceclient module), and a command-line script (glance). Each implements
 100% of the OpenStack Glance API.
 
+
+%package doc
+Summary:          Documentation for OpenStack Nova API Client
+Group:            Documentation
+
+BuildRequires:    python-sphinx
+
+%description      doc
+This is a client for the OpenStack Glance API. There's a Python API (the
+glanceclient module), and a command-line script (glance). Each implements
+100% of the OpenStack Glance API.
+
+This package contains auto-generated documentation.
+
+
 %prep
 %setup -q
 
 %patch0001 -p1
-%patch0002 -p1
-%patch0003 -p1
+
+# We provide version like this in order to remove runtime dep on pbr.
+sed -i s/REDHATGLANCECLIENTVERSION/%{version}/ glanceclient/__init__.py
 
 # Remove bundled egg-info
 rm -rf python_glanceclient.egg-info
 # let RPM handle deps
 sed -i '/setup_requires/d; /install_requires/d; /dependency_links/d' setup.py
+rm -rf {,test-}requirements.txt
 
 %build
 %{__python} setup.py build
@@ -49,11 +67,14 @@ sed -i '/setup_requires/d; /install_requires/d; /dependency_links/d' setup.py
 %install
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 
-# generate versioninfo
-echo "%{version}" > %{buildroot}%{python_sitelib}/glanceclient/versioninfo
+export PYTHONPATH="$( pwd ):$PYTHONPATH"
+sphinx-build -b html doc/source html
 
-# Delete tests
-rm -fr %{buildroot}%{python_sitelib}/tests
+# For some reason, openstack-glance is providing (obsoloete) glance manpage.
+# Enable this once https://bugs.launchpad.net/glance/+bug/1212300 is fixed.
+#sphinx-build -b man doc/source man
+#install -p -D -m 644 man/glance.1 %{buildroot}%{_mandir}/man1/glance.1
+
 
 %files
 %doc README.rst
@@ -61,8 +82,20 @@ rm -fr %{buildroot}%{python_sitelib}/tests
 %{_bindir}/glance
 %{python_sitelib}/glanceclient
 %{python_sitelib}/*.egg-info
+#%{_mandir}/man1/glance.1.gz
+
+%files doc
+%doc html
+
 
 %changelog
+* Wed Aug 14 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.10.0-1
+- Update to upstream 0.10.0.
+- Remove runtime dependency on python-pbr.
+- Add doc package.
+- New BuildRequires: python2-devel, python-d2to1, python-pbr
+- Remove python-keystoneclient version cap.
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
