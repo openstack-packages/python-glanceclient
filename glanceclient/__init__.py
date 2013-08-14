@@ -23,11 +23,4 @@ except ImportError:
     import warnings
     warnings.warn("Could not import glanceclient.client", ImportWarning)
 
-import pbr.version
-
-version_info = pbr.version.VersionInfo('python-glanceclient')
-
-try:
-    __version__ = version_info.version_string()
-except AttributeError:
-    __version__ = None
+__version__ = "REDHATGLANCECLIENTVERSION"
