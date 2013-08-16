@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
 Version:          0.10.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -89,6 +89,9 @@ sphinx-build -b html doc/source html
 
 
 %changelog
+* Fri Aug 16 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.10.0-2
+- Bump release as previous build failed due to pbr package problem.
+
 * Wed Aug 14 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.10.0-1
 - Update to upstream 0.10.0.
 - Remove runtime dependency on python-pbr.
