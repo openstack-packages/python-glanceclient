@@ -1,7 +1,7 @@
 Name:             python-glanceclient
 Epoch:            1
-Version:          0.10.0
-Release:          2%{?dist}
+Version:          0.12.0
+Release:          1%{?dist}
 Summary:          Python API and CLI for OpenStack Glance
 
 Group:            Development/Languages
@@ -10,7 +10,7 @@ URL:              http://github.com/openstack/python-glanceclient
 Source0:          https://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
 
 #
-# patches_base=0.10.0
+# patches_base=0.12.0
 #
 Patch0001: 0001-Remove-runtime-dependency-on-python-pbr.patch
 
@@ -19,6 +19,7 @@ BuildRequires:    python2-devel
 BuildRequires:    python-setuptools
 BuildRequires:    python-d2to1
 BuildRequires:    python-pbr
+BuildRequires:    python-sphinx
 
 Requires:         python-httplib2
 Requires:         python-keystoneclient
@@ -70,10 +71,9 @@ rm -rf {,test-}requirements.txt
 export PYTHONPATH="$( pwd ):$PYTHONPATH"
 sphinx-build -b html doc/source html
 
-# For some reason, openstack-glance is providing (obsoloete) glance manpage.
-# Enable this once https://bugs.launchpad.net/glance/+bug/1212300 is fixed.
-#sphinx-build -b man doc/source man
-#install -p -D -m 644 man/glance.1 %{buildroot}%{_mandir}/man1/glance.1
+# generate man page
+sphinx-build -b man doc/source man
+install -p -D -m 644 man/glance.1 %{buildroot}%{_mandir}/man1/glance.1
 
 
 %files
@@ -82,13 +82,17 @@ sphinx-build -b html doc/source html
 %{_bindir}/glance
 %{python_sitelib}/glanceclient
 %{python_sitelib}/*.egg-info
-#%{_mandir}/man1/glance.1.gz
+%{_mandir}/man1/glance.1.gz
 
 %files doc
 %doc html
 
 
 %changelog
+* Tue Nov 19 2013 Jakub Ruzicka <jruzicka@redhat.com> 1:0.12.0-1
+- Update to upstream 0.12.0
+- Provide upstream man page
+
 * Fri Aug 16 2013 Jakub Ruzicka <jruzicka@redhat.com> - 1:0.10.0-2
 - Bump release as previous build failed due to pbr package problem.
 
