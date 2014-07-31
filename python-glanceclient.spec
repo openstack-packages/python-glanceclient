@@ -49,7 +49,7 @@ This package contains auto-generated documentation.
 
 
 %prep
-%setup -q
+%setup -q -n python-glanceclient-%{upstream_version}
 
 %patch0001 -p1
 
