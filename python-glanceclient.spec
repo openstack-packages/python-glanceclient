@@ -20,6 +20,7 @@ BuildRequires:    python-setuptools
 BuildRequires:    python-d2to1
 BuildRequires:    python-pbr
 BuildRequires:    python-sphinx
+BuildRequires:    python-oslo-sphinx
 
 Requires:         python-httplib2
 Requires:         python-keystoneclient
@@ -89,6 +90,9 @@ install -p -D -m 644 man/glance.1 %{buildroot}%{_mandir}/man1/glance.1
 
 
 %changelog
+* Fri Aug 22 2014 Derek Higgins <derekh@redhat.com> - XXX
+- Add dependency to python-oslo-sphynx
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.12.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
