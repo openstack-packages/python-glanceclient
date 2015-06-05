@@ -1,0 +1,7 @@
+Code-Review+2: Gaël Chamoulaud <gchamoul@redhat.com>
+Verified+1: Gaël Chamoulaud <gchamoul@redhat.com>
+Submitted-by: Gaël Chamoulaud <gchamoul@redhat.com>
+Submitted-at: Fri, 05 Jun 2015 14:29:12 +0200
+Reviewed-on: https://review.gerrithub.io/234985
+Project: openstack-packages/python-glanceclient
+Branch: refs/heads/rpm-master
