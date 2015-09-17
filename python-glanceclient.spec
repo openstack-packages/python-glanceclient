@@ -1,10 +1,9 @@
 Name:             python-glanceclient
 Epoch:            1
 Version:          XXX
-Release:          XXX{?dist}
+Release:          XXX
 Summary:          Python API and CLI for OpenStack Glance
 
-Group:            Development/Languages
 License:          ASL 2.0
 URL:              http://github.com/openstack/python-glanceclient
 Source0:          https://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
@@ -17,15 +16,19 @@ BuildRequires:    python-pbr
 BuildRequires:    python-sphinx
 BuildRequires:    python-oslo-sphinx
 
+Requires:         python-babel >= 1.3
 Requires:         python-httplib2
 Requires:         python-keystoneclient
+Requires:         python-oslo-i18n
 Requires:         python-oslo-utils
 Requires:         python-pbr
 Requires:         python-prettytable
 Requires:         python-requests
 Requires:         python-setuptools
+Requires:         python-six >= 1.9.0
 Requires:         python-warlock
 Requires:         pyOpenSSL
+
 
 %description
 This is a client for the OpenStack Glance API. There's a Python API (the
@@ -35,7 +38,6 @@ glanceclient module), and a command-line script (glance). Each implements
 
 %package doc
 Summary:          Documentation for OpenStack Nova API Client
-Group:            Documentation
 
 BuildRequires:    python-sphinx
 
@@ -56,8 +58,10 @@ rm -rf python_glanceclient.egg-info
 sed -i '/setup_requires/d; /install_requires/d; /dependency_links/d' setup.py
 rm -rf {,test-}requirements.txt
 
+
 %build
 %{__python2} setup.py build
+
 
 %install
 %{__python2} setup.py install -O1 --skip-build --root %{buildroot}
@@ -72,7 +76,6 @@ install -p -D -m 644 man/glance.1 %{buildroot}%{_mandir}/man1/glance.1
 
 %files
 %doc README.rst
-%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %{_bindir}/glance
 %{python2_sitelib}/glanceclient
