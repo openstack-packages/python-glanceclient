@@ -1,0 +1,7 @@
+Verified+1: rdo-ci-jenkins <whayutin+rdocijenkins@redhat.com>
+Code-Review+2: Haïkel Guémar <haikel.guemar@gmail.com>
+Submitted-by: Haïkel Guémar <haikel.guemar@gmail.com>
+Submitted-at: Fri, 18 Sep 2015 20:43:58 +0200
+Reviewed-on: https://review.gerrithub.io/246755
+Project: openstack-packages/python-glanceclient
+Branch: refs/heads/rpm-master
